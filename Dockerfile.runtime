@@ -1,0 +1,1 @@
+ENV JAVA_OPTS="-Dspring.profiles.active=production -Xms2g -Xmx2g -XX:+HeapDumpOnOutOfMemoryError"
