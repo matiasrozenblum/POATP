@@ -29,12 +29,12 @@ class UserStorage {
         })
     }
 
-    fun search(id: Long): List<User> {
+    fun search(id: Long): User {
         return transaction(Connection.TRANSACTION_READ_COMMITTED, repetitionAttempts = 1) {
             id.let {
                 UserTable
                     .select { UserTable.id eq it }
-                    .map { it.toUser() }
+                    .map { it.toUser() }.firstOrNull() ?: throw RuntimeException()
             }
         }
     }

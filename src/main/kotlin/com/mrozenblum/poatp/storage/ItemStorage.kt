@@ -36,6 +36,16 @@ class ItemStorage {
             }
         }
     }
+
+    fun delete(id: Long): Boolean {
+        val result = transaction(Connection.TRANSACTION_READ_COMMITTED, repetitionAttempts = 1) {
+            id.let {
+                ItemTable
+                    .deleteWhere { ItemTable.id eq it }
+            }
+        }
+        return result == 1
+    }
 }
 
 fun ResultRow.toItem() = Item(
