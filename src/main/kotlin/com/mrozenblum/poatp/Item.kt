@@ -7,7 +7,7 @@ data class Item(
 )
 
 data class ItemResponse(
-    val transactionId: Long
+    val itemId: Long
 )
 
 fun Item.asResponse() = ItemResponse(id!!)

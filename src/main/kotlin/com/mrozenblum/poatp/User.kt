@@ -8,7 +8,7 @@ data class User(
 )
 
 data class UserResponse(
-    val transactionId: Long
+    val userId: Long
 )
 
 fun User.asResponse() = UserResponse(id!!)

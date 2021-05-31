@@ -21,26 +21,25 @@ class Service(
 
     fun getItem(itemId: Long) = itemStorageService.search(itemId)
 
-    fun createTransaction(transaction: Transaction) {
+    fun createTransaction(transaction: Transaction): TransactionResponse {
         var value: Long = 0
         transaction.items.forEach {
             val item = getItem(it)
             value += item.value
         }
-        transactionStorageService.store(transaction.copy(value = value))
+        return transactionStorageService.store(transaction.copy(value = value))
     }
 
     fun getTransaction(transactionId: Long) = transactionStorageService.search(transactionId)
 
-    fun closeTransaction(transactionId: Long) {
+    fun closeTransaction(transactionId: Long): Boolean {
         val transaction = getTransaction(transactionId)
         val userPoints = userStorage.getPoints(transaction.userId)
         var status = FAILED
-        if (userPoints > transaction.value!!) {
+        if (userPoints >= transaction.value!!) {
             status = SUCCESS
             userStorage.discountPoints(transaction.userId, userPoints - transaction.value)
         }
-        transactionStorageService.updateStatus(transactionId, status)
-
+        return transactionStorageService.updateStatus(transactionId, status)
     }
 }
