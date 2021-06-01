@@ -1,6 +1,7 @@
 package com.mrozenblum.poatp.storage
 
 import com.mrozenblum.poatp.Item
+import com.mrozenblum.poatp.ItemNotFoundException
 import com.mrozenblum.poatp.ItemResponse
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -32,7 +33,7 @@ class ItemStorage {
             id.let {
                 ItemTable
                     .select { ItemTable.id eq it }
-                    .map { it.toItem() }.firstOrNull() ?: throw RuntimeException()
+                    .map { it.toItem() }.firstOrNull() ?: throw ItemNotFoundException()
             }
         }
     }

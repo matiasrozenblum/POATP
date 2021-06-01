@@ -1,6 +1,7 @@
 package com.mrozenblum.poatp.storage
 
 import com.mrozenblum.poatp.User
+import com.mrozenblum.poatp.UserNotFoundException
 import com.mrozenblum.poatp.UserResponse
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -34,7 +35,7 @@ class UserStorage {
             id.let {
                 UserTable
                     .select { UserTable.id eq it }
-                    .map { it.toUser() }.firstOrNull() ?: throw RuntimeException()
+                    .map { it.toUser() }.firstOrNull() ?: throw UserNotFoundException()
             }
         }
     }

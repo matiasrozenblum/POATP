@@ -72,7 +72,7 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
             .andExpect(MockMvcResultMatchers.jsonPath("$.points").value(10))
     }
 
-    /*@Test
+    @Test
     fun getUserNotFound() {
         mockMvc
             .perform(
@@ -80,11 +80,8 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
             )
             .andExpect(MockMvcResultMatchers.status().is4xxClientError)
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Juan Perez"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("juanperez@gmail.com"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.points").value(10))
-    }*/
+            .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("user_not_found")))
+    }
 
     @Test
     fun createItem() {
@@ -116,6 +113,17 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
             .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
             .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Pelota"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.value").value(10))
+    }
+
+    @Test
+    fun getItemNotFound() {
+        mockMvc
+            .perform(
+                get("/api/item/2")
+            )
+            .andExpect(MockMvcResultMatchers.status().is4xxClientError)
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("item_not_found")))
     }
 
     @Test
@@ -151,6 +159,17 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
             .andExpect(MockMvcResultMatchers.jsonPath("$.items").value(1))
             .andExpect(MockMvcResultMatchers.jsonPath("$.value").value(10))
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(OPEN.name))
+    }
+
+    @Test
+    fun getTransactionNotFound() {
+        mockMvc
+            .perform(
+                get("/api/transaction/2")
+            )
+            .andExpect(MockMvcResultMatchers.status().is4xxClientError)
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("transaction_not_found")))
     }
 
     @Test

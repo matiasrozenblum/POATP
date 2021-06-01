@@ -1,6 +1,7 @@
 package com.mrozenblum.poatp.storage
 
 import com.mrozenblum.poatp.User
+import com.mrozenblum.poatp.UserNotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -28,7 +29,7 @@ class UserStorageTest {
 
     @Test
     fun testStoreAndSearch() {
-        assertThrows<RuntimeException> {
+        assertThrows<UserNotFoundException> {
             userStorage.search(1)
         }
 
@@ -47,7 +48,7 @@ class UserStorageTest {
 
     @Test
     fun testDelete() {
-        assertThrows<RuntimeException> {
+        assertThrows<UserNotFoundException> {
             userStorage.search(1)
         }
 
@@ -74,7 +75,7 @@ class UserStorageTest {
 
     @Test
     fun testDeleteFailedNotFound() {
-        assertThrows<RuntimeException> {
+        assertThrows<UserNotFoundException> {
             userStorage.search(1)
         }
 

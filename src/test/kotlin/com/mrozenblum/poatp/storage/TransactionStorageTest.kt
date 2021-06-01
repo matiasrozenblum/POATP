@@ -1,6 +1,7 @@
 package com.mrozenblum.poatp.storage
 
 import com.mrozenblum.poatp.Transaction
+import com.mrozenblum.poatp.TransactionNotFoundException
 import org.assertj.core.api.Assertions
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -28,7 +29,7 @@ class TransactionStorageTest {
 
     @Test
     fun testStoreAndSearch() {
-        assertThrows<RuntimeException> {
+        assertThrows<TransactionNotFoundException> {
             transactionStorage.search(1)
         }
 
@@ -47,7 +48,7 @@ class TransactionStorageTest {
 
     @Test
     fun testDelete() {
-        assertThrows<RuntimeException> {
+        assertThrows<TransactionNotFoundException> {
             transactionStorage.search(1)
         }
 
@@ -67,14 +68,14 @@ class TransactionStorageTest {
             Assertions.assertThat(this).isTrue
         }
 
-        assertThrows<RuntimeException> {
+        assertThrows<TransactionNotFoundException> {
             transactionStorage.search(1)
         }
     }
 
     @Test
     fun testDeleteFailedNotFound() {
-        assertThrows<RuntimeException> {
+        assertThrows<TransactionNotFoundException> {
             transactionStorage.search(1)
         }
 

@@ -1,6 +1,7 @@
 package com.mrozenblum.poatp.storage
 
 import com.mrozenblum.poatp.Transaction
+import com.mrozenblum.poatp.TransactionNotFoundException
 import com.mrozenblum.poatp.TransactionResponse
 import com.mrozenblum.poatp.storage.TransactionStatus.OPEN
 import org.jetbrains.exposed.sql.*
@@ -36,7 +37,7 @@ class TransactionStorage {
             id.let {
                 TransactionTable
                     .select { TransactionTable.id eq it }.limit(1)
-                    .map { it.toTransaction() }.firstOrNull() ?: throw RuntimeException()
+                    .map { it.toTransaction() }.firstOrNull() ?: throw TransactionNotFoundException()
             }
         }
     }
