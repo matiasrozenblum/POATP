@@ -1,4 +1,4 @@
-package com.mrozenblum.poatp
+package com.mrozenblum.poatp.domain
 
 data class Transaction(
     val id: Long? = null,
@@ -11,5 +11,3 @@ data class Transaction(
 data class TransactionResponse(
     val transactionId: Long
 )
-
-fun Transaction.asResponse() = TransactionResponse(id!!)

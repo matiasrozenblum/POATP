@@ -1,4 +1,4 @@
-package com.mrozenblum.poatp
+package com.mrozenblum.poatp.domain
 
 data class User(
     val id: Long? = null,
@@ -10,5 +10,3 @@ data class User(
 data class UserResponse(
     val userId: Long
 )
-
-fun User.asResponse() = UserResponse(id!!)

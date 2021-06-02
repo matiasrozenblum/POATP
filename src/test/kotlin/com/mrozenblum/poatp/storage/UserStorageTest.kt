@@ -1,7 +1,7 @@
 package com.mrozenblum.poatp.storage
 
-import com.mrozenblum.poatp.User
 import com.mrozenblum.poatp.UserNotFoundException
+import com.mrozenblum.poatp.domain.User
 import org.assertj.core.api.Assertions.assertThat
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction

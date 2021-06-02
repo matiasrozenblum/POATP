@@ -1,9 +1,9 @@
 package com.mrozenblum.poatp.controller
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.mrozenblum.poatp.Item
-import com.mrozenblum.poatp.Transaction
-import com.mrozenblum.poatp.User
+import com.mrozenblum.poatp.domain.Item
+import com.mrozenblum.poatp.domain.Transaction
+import com.mrozenblum.poatp.domain.User
 import com.mrozenblum.poatp.storage.ItemTable
 import com.mrozenblum.poatp.storage.TransactionStatus.*
 import com.mrozenblum.poatp.storage.TransactionTable

@@ -1,4 +1,4 @@
-package com.mrozenblum.poatp
+package com.mrozenblum.poatp.domain
 
 data class Item(
     val id: Long? = null,
@@ -9,5 +9,3 @@ data class Item(
 data class ItemResponse(
     val itemId: Long
 )
-
-fun Item.asResponse() = ItemResponse(id!!)

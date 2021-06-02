@@ -1,8 +1,8 @@
 package com.mrozenblum.poatp.storage
 
-import com.mrozenblum.poatp.User
 import com.mrozenblum.poatp.UserNotFoundException
-import com.mrozenblum.poatp.UserResponse
+import com.mrozenblum.poatp.domain.User
+import com.mrozenblum.poatp.domain.UserResponse
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Service

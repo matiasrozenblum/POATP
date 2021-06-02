@@ -1,5 +1,9 @@
 package com.mrozenblum.poatp
 
+import com.mrozenblum.poatp.domain.Item
+import com.mrozenblum.poatp.domain.Transaction
+import com.mrozenblum.poatp.domain.TransactionResponse
+import com.mrozenblum.poatp.domain.User
 import com.mrozenblum.poatp.storage.ItemStorage
 import com.mrozenblum.poatp.storage.TransactionStatus.FAILED
 import com.mrozenblum.poatp.storage.TransactionStatus.SUCCESS

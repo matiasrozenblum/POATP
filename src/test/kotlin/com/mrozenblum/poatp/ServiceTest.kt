@@ -1,5 +1,6 @@
 package com.mrozenblum.poatp
 
+import com.mrozenblum.poatp.domain.*
 import com.mrozenblum.poatp.storage.ItemStorage
 import com.mrozenblum.poatp.storage.TransactionStatus.*
 import com.mrozenblum.poatp.storage.TransactionStorage

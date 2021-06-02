@@ -1,8 +1,8 @@
 package com.mrozenblum.poatp.storage
 
-import com.mrozenblum.poatp.Transaction
 import com.mrozenblum.poatp.TransactionNotFoundException
-import com.mrozenblum.poatp.TransactionResponse
+import com.mrozenblum.poatp.domain.Transaction
+import com.mrozenblum.poatp.domain.TransactionResponse
 import com.mrozenblum.poatp.storage.TransactionStatus.OPEN
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction

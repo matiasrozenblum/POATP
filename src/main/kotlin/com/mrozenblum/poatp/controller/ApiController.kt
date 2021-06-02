@@ -1,9 +1,9 @@
 package com.mrozenblum.poatp.controller
 
-import com.mrozenblum.poatp.Item
 import com.mrozenblum.poatp.Service
-import com.mrozenblum.poatp.Transaction
-import com.mrozenblum.poatp.User
+import com.mrozenblum.poatp.domain.Item
+import com.mrozenblum.poatp.domain.Transaction
+import com.mrozenblum.poatp.domain.User
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 

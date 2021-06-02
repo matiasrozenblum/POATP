@@ -1,7 +1,7 @@
 package com.mrozenblum.poatp.storage
 
-import com.mrozenblum.poatp.Transaction
 import com.mrozenblum.poatp.TransactionNotFoundException
+import com.mrozenblum.poatp.domain.Transaction
 import org.assertj.core.api.Assertions
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction

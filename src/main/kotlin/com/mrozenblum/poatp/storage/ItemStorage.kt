@@ -1,8 +1,8 @@
 package com.mrozenblum.poatp.storage
 
-import com.mrozenblum.poatp.Item
 import com.mrozenblum.poatp.ItemNotFoundException
-import com.mrozenblum.poatp.ItemResponse
+import com.mrozenblum.poatp.domain.Item
+import com.mrozenblum.poatp.domain.ItemResponse
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Service
