@@ -2,10 +2,10 @@
 # TP Programacion con Objetos Avanzada
 
 #### Modelo de clases
-
+![Modelo de clases](docs/modelo_de_clases.png)
 
 #### Modelo de datos
-
+![Modelo de datos](docs/modelo_de_datos.png)
 
 
 ## API Reference
