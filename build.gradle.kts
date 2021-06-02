@@ -20,26 +20,17 @@ repositories {
 }
 
 dependencies {
-    //implementation("org.springframework.boot:spring-boot-starter")
-    //implementation ("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-web") {
         exclude(module = "spring-boot-starter-tomcat")
     }
     implementation("org.springframework.boot:spring-boot-starter-jetty")
-    //implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("mysql:mysql-connector-java:8.0.17")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
-    implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
-    implementation("org.hibernate:hibernate-c3p0:5.3.6.Final")
+    implementation("mysql:mysql-connector-java:8.0.17")
     implementation("com.zaxxer:HikariCP:3.4.5")
     implementation("com.h2database:h2:1.4.200")
-    implementation("org.json:json:20190722")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
-    testImplementation("io.mockk:mockk:1.9.3")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
