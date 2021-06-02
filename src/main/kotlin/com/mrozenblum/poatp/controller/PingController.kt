@@ -1,4 +1,4 @@
-package com.mercadolibre.bulk_registration_api.controller
+package com.mrozenblum.poatp.controller
 
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
