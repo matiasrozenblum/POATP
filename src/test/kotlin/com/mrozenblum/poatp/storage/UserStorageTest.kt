@@ -47,6 +47,25 @@ class UserStorageTest {
     }
 
     @Test
+    fun testStoreAndSearchByEmail() {
+        assertThrows<UserNotFoundException> {
+            userStorage.search(1)
+        }
+
+        val user = User(
+            name = "Juan Perez",
+            email = "juanperez@gmail.com",
+            points = 10
+        )
+        userStorage.store(user)
+
+        userStorage.searchByEmail("juanperez@gmail.com").apply {
+            assertThat(this).isNotNull
+            assertThat(this.copy(null)).isEqualTo(user)
+        }
+    }
+
+    @Test
     fun testDelete() {
         assertThrows<UserNotFoundException> {
             userStorage.search(1)
@@ -65,6 +84,33 @@ class UserStorageTest {
         }
 
         userStorage.delete(1).apply {
+            assertThat(this).isTrue
+        }
+
+        assertThrows<RuntimeException> {
+            userStorage.search(1)
+        }
+    }
+
+    @Test
+    fun testDeleteByEmail() {
+        assertThrows<UserNotFoundException> {
+            userStorage.search(1)
+        }
+
+        val user = User(
+            name = "Juan Perez",
+            email = "juanperez@gmail.com",
+            points = 10
+        )
+        userStorage.store(user)
+
+        userStorage.search(1).apply {
+            assertThat(this).isNotNull
+            assertThat(this.copy(null)).isEqualTo(user)
+        }
+
+        userStorage.deleteByEmail("juanperez@gmail.com").apply {
             assertThat(this).isTrue
         }
 

@@ -9,17 +9,25 @@ import org.springframework.stereotype.Service
 
 @Service
 class Service(
-    private val transactionStorageService: TransactionStorage,
+    private val transactionStorage: TransactionStorage,
     private val userStorage: UserStorage,
-    private val itemStorageService: ItemStorage,
+    private val itemStorage: ItemStorage,
 ) {
-    fun getUser(userId: Long) = userStorage.search(userId)
-
     fun saveUser(user: User) = userStorage.store(user)
 
-    fun saveItem(item: Item) = itemStorageService.store(item)
+    fun getUser(userId: Long) = userStorage.search(userId)
 
-    fun getItem(itemId: Long) = itemStorageService.search(itemId)
+    fun getUserByEmail(email: String) = userStorage.searchByEmail(email)
+
+    fun deleteUser(userId: Long) = userStorage.delete(userId)
+
+    fun deleteUserByEmail(email: String) = userStorage.deleteByEmail(email)
+
+    fun saveItem(item: Item) = itemStorage.store(item)
+
+    fun getItem(itemId: Long) = itemStorage.search(itemId)
+
+    fun deleteItem(itemId: Long) = itemStorage.delete(itemId)
 
     fun createTransaction(transaction: Transaction): TransactionResponse {
         var value: Long = 0
@@ -27,10 +35,12 @@ class Service(
             val item = getItem(it)
             value += item.value
         }
-        return transactionStorageService.store(transaction.copy(value = value))
+        return transactionStorage.store(transaction.copy(value = value))
     }
 
-    fun getTransaction(transactionId: Long) = transactionStorageService.search(transactionId)
+    fun getTransaction(transactionId: Long) = transactionStorage.search(transactionId)
+
+    fun deleteTransaction(transactionId: Long) = transactionStorage.delete(transactionId)
 
     fun closeTransaction(transactionId: Long): Boolean {
         val transaction = getTransaction(transactionId)
@@ -40,6 +50,6 @@ class Service(
             status = SUCCESS
             userStorage.discountPoints(transaction.userId, userPoints - transaction.value)
         }
-        return transactionStorageService.updateStatus(transactionId, status)
+        return transactionStorage.updateStatus(transactionId, status)
     }
 }

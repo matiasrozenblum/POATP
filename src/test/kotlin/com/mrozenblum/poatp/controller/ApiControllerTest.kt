@@ -73,6 +73,32 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
     }
 
     @Test
+    fun getUserByEmail() {
+        saveUser()
+        mockMvc
+            .perform(
+                get("/api/user?email=juanperez@gmail.com")
+            )
+            .andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Juan Perez"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("juanperez@gmail.com"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.points").value(10))
+    }
+
+    @Test
+    fun deleteUser() {
+        saveUser()
+        mockMvc
+            .perform(
+                delete("/api/user/1")
+            )
+            .andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
     fun getUserNotFound() {
         mockMvc
             .perform(
@@ -81,6 +107,16 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
             .andExpect(MockMvcResultMatchers.status().is4xxClientError)
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("user_not_found")))
+    }
+
+    @Test
+    fun deleteUserNotFound() {
+        mockMvc
+            .perform(
+                delete("/api/user/2")
+            )
+            .andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+            .andDo(MockMvcResultHandlers.print())
     }
 
     @Test
@@ -116,6 +152,17 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
     }
 
     @Test
+    fun deleteItem() {
+        saveItem()
+        mockMvc
+            .perform(
+                delete("/api/item/1")
+            )
+            .andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
     fun getItemNotFound() {
         mockMvc
             .perform(
@@ -124,6 +171,16 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
             .andExpect(MockMvcResultMatchers.status().is4xxClientError)
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("item_not_found")))
+    }
+
+    @Test
+    fun deleteItemNotFound() {
+        mockMvc
+            .perform(
+                delete("/api/item/2")
+            )
+            .andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+            .andDo(MockMvcResultHandlers.print())
     }
 
     @Test
@@ -162,6 +219,17 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
     }
 
     @Test
+    fun deleteTransaction() {
+        saveTransaction()
+        mockMvc
+            .perform(
+                delete("/api/transaction/1")
+            )
+            .andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
     fun getTransactionNotFound() {
         mockMvc
             .perform(
@@ -170,6 +238,16 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
             .andExpect(MockMvcResultMatchers.status().is4xxClientError)
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("transaction_not_found")))
+    }
+
+    @Test
+    fun deleteTransactionNotFound() {
+        mockMvc
+            .perform(
+                delete("/api/transaction/2")
+            )
+            .andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+            .andDo(MockMvcResultHandlers.print())
     }
 
     @Test

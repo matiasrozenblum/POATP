@@ -40,12 +40,12 @@ class UserStorage {
         }
     }
 
-    fun searchByEmail(email: String): List<User> {
+    fun searchByEmail(email: String): User {
         return transaction(Connection.TRANSACTION_READ_COMMITTED, repetitionAttempts = 1) {
             email.let {
                 UserTable
                     .select { UserTable.email eq it }
-                    .map { it.toUser() }
+                    .map { it.toUser() }.firstOrNull() ?: throw UserNotFoundException()
             }
         }
     }

@@ -21,6 +21,23 @@ class ApiController(
         @PathVariable userId: Long,
     ) = service.getUser(userId)
 
+    @GetMapping("/api/user")
+    fun getUserByEmail(
+        @RequestParam email: String,
+    ) = service.getUserByEmail(email)
+
+    @DeleteMapping("/api/user/{userId}")
+    @ResponseBody
+    fun deleteUser(
+        @PathVariable userId: Long,
+    ) = service.deleteUser(userId)
+
+    @DeleteMapping("/api/user")
+    @ResponseBody
+    fun deleteUserByEmail(
+        @RequestParam email: String,
+    ) = service.deleteUserByEmail(email)
+
     @PostMapping("/api/item")
     @ResponseStatus(code = HttpStatus.CREATED)
     fun createItem(@RequestBody item: Item) = service.saveItem(item)
@@ -30,6 +47,12 @@ class ApiController(
         @PathVariable itemId: Long,
     ) = service.getItem(itemId)
 
+    @DeleteMapping("/api/item/{itemId}")
+    @ResponseBody
+    fun deleteItem(
+        @PathVariable itemId: Long,
+    ) = service.deleteItem(itemId)
+
     @PostMapping("/api/transaction")
     @ResponseStatus(code = HttpStatus.CREATED)
     fun createTransaction(@RequestBody transaction: Transaction) = service.createTransaction(transaction)
@@ -38,6 +61,12 @@ class ApiController(
     fun getTransaction(
         @PathVariable transactionId: Long,
     ) = service.getTransaction(transactionId)
+
+    @DeleteMapping("/api/transaction/{transactionId}")
+    @ResponseBody
+    fun deleteTransaction(
+        @PathVariable transactionId: Long,
+    ) = service.deleteTransaction(transactionId)
 
     @PutMapping("/api/transaction/{transactionId}")
     fun closeTransaction(

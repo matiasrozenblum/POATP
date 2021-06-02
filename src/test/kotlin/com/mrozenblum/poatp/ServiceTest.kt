@@ -44,6 +44,19 @@ class ServiceTest {
     }
 
     @Test
+    fun getUserByEmail() {
+        val user = User(
+            name = "Juan Perez",
+            email = "juanperez@gmail.com",
+            points = 10
+        )
+        whenever(userStorage.searchByEmail("juanperez@gmail.com")).thenReturn(user)
+        service.getUserByEmail("juanperez@gmail.com").apply {
+            assertThat(this.copy(null)).isEqualTo(user)
+        }
+    }
+
+    @Test
     fun saveUser() {
         val user = User(
             name = "Juan Perez",
@@ -55,6 +68,24 @@ class ServiceTest {
 
         service.saveUser(user).apply {
             assertThat(this).isEqualTo(userResponse)
+        }
+    }
+
+    @Test
+    fun deleteUser() {
+        whenever(userStorage.delete(1)).thenReturn(true)
+
+        userStorage.delete(1).apply {
+            assertThat(this).isTrue
+        }
+    }
+
+    @Test
+    fun deleteUserByEmail() {
+        whenever(userStorage.deleteByEmail("juanperez@gmail.com")).thenReturn(true)
+
+        userStorage.deleteByEmail("juanperez@gmail.com").apply {
+            assertThat(this).isTrue
         }
     }
 
@@ -81,6 +112,15 @@ class ServiceTest {
 
         service.saveItem(item).apply {
             assertThat(this).isEqualTo(itemResponse)
+        }
+    }
+
+    @Test
+    fun deleteItem() {
+        whenever(itemStorage.delete(1)).thenReturn(true)
+
+        itemStorage.delete(1).apply {
+            assertThat(this).isTrue
         }
     }
 
@@ -115,6 +155,15 @@ class ServiceTest {
         whenever(transactionStorage.search(1)).thenReturn(transaction)
         service.getTransaction(1).apply {
             assertThat(this.copy(null)).isEqualTo(transaction)
+        }
+    }
+
+    @Test
+    fun deleteTransaction() {
+        whenever(transactionStorage.delete(1)).thenReturn(true)
+
+        transactionStorage.delete(1).apply {
+            assertThat(this).isTrue
         }
     }
 
