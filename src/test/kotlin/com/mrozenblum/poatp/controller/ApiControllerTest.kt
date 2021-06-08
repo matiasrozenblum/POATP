@@ -207,6 +207,7 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
     fun getTransaction() {
         saveTransaction()
         saveItem()
+        saveTransactionItem()
         mockMvc
             .perform(
                 get("/api/transaction/1")
@@ -238,7 +239,7 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
             )
             .andExpect(MockMvcResultMatchers.status().is4xxClientError)
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("transaction_not_found")))
+            .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("transaction_item_not_found")))
     }
 
     @Test

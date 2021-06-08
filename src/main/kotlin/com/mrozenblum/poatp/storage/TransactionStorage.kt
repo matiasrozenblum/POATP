@@ -51,6 +51,7 @@ class TransactionStorage(
     }
 
     fun delete(id: Long): Boolean {
+        transactionItemStorage.deleteByTransactionId(id)
         val result = transaction(Connection.TRANSACTION_READ_COMMITTED, repetitionAttempts = 1) {
             id.let {
                 TransactionTable

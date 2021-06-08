@@ -1,6 +1,6 @@
 package com.mrozenblum.poatp.storage
 
-import com.mrozenblum.poatp.ItemNotFoundException
+import com.mrozenblum.poatp.TransactionItemNotFoundException
 import com.mrozenblum.poatp.domain.TransactionItem
 import com.mrozenblum.poatp.storage.TransactionItemTable.transactionId
 import org.jetbrains.exposed.sql.*
@@ -33,7 +33,7 @@ class TransactionItemStorage {
             id.let {
                 TransactionItemTable
                     .select { TransactionItemTable.id eq it }
-                    .map { it.toTransactionItem() }.firstOrNull() ?: throw ItemNotFoundException()
+                    .map { it.toTransactionItem() }.firstOrNull() ?: throw TransactionItemNotFoundException()
             }
         }
     }
@@ -43,7 +43,7 @@ class TransactionItemStorage {
             id.let {
                 TransactionItemTable
                     .select { transactionId eq transactionid }
-                    .map { it.toTransactionItem() }
+                    .map { it.toTransactionItem() }.ifEmpty { throw TransactionItemNotFoundException() }
             }
         }
     }
@@ -53,6 +53,16 @@ class TransactionItemStorage {
             id.let {
                 TransactionItemTable
                     .deleteWhere { TransactionItemTable.id eq it }
+            }
+        }
+        return result == 1
+    }
+
+    fun deleteByTransactionId(transactionId: Long): Boolean {
+        val result = transaction(Connection.TRANSACTION_READ_COMMITTED, repetitionAttempts = 1) {
+            transactionId.let {
+                TransactionItemTable
+                    .deleteWhere { TransactionItemTable.transactionId eq it }
             }
         }
         return result == 1

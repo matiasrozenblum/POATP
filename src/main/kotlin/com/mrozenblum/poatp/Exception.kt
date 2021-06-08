@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 class UserNotFoundException : RuntimeException("Cannot find user")
 class ItemNotFoundException : RuntimeException("Cannot find item")
 class TransactionNotFoundException : RuntimeException("Cannot find transaction")
+class TransactionItemNotFoundException : RuntimeException("Cannot find transaction item")
 
 @RestControllerAdvice
 class ExceptionHandler {
@@ -27,6 +28,12 @@ class ExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handle(e: TransactionNotFoundException): ErrorMessage {
         return errorMessage(e, "transaction_not_found")
+    }
+
+    @ExceptionHandler(value = [TransactionItemNotFoundException::class])
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    fun handle(e: TransactionItemNotFoundException): ErrorMessage {
+        return errorMessage(e, "transaction_item_not_found")
     }
 
     fun errorMessage(exception: Throwable, code: String) = ErrorMessage(exception.message ?: "", code)
