@@ -2,7 +2,7 @@ package com.mrozenblum.poatp.controller
 
 import com.mrozenblum.poatp.Service
 import com.mrozenblum.poatp.domain.Item
-import com.mrozenblum.poatp.domain.Transaction
+import com.mrozenblum.poatp.domain.TransactionBody
 import com.mrozenblum.poatp.domain.User
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -55,7 +55,7 @@ class ApiController(
 
     @PostMapping("/api/transaction")
     @ResponseStatus(code = HttpStatus.CREATED)
-    fun createTransaction(@RequestBody transaction: Transaction) = service.createTransaction(transaction)
+    fun createTransaction(@RequestBody transactionBody: TransactionBody) = service.createTransaction(transactionBody)
 
     @GetMapping("/api/transaction/{transactionId}")
     fun getTransaction(

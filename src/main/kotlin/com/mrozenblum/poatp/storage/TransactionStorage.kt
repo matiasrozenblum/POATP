@@ -1,8 +1,8 @@
 package com.mrozenblum.poatp.storage
 
 import com.mrozenblum.poatp.TransactionNotFoundException
+import com.mrozenblum.poatp.domain.*
 import com.mrozenblum.poatp.domain.Transaction
-import com.mrozenblum.poatp.domain.TransactionResponse
 import com.mrozenblum.poatp.storage.TransactionStatus.OPEN
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -12,7 +12,6 @@ import java.sql.Connection
 object TransactionTable : Table("transaction") {
     val id: Column<Long> = long("id").autoIncrement()
     val userId: Column<Long> = long("user_id")
-    val items: Column<String> = varchar("items", 1000)
     val value: Column<Long> = long("value")
     val status: Column<String> = varchar("status", 50).default(OPEN.name)
 
@@ -20,24 +19,33 @@ object TransactionTable : Table("transaction") {
 }
 
 @Service
-class TransactionStorage {
+class TransactionStorage(
+    val itemStorage: ItemStorage,
+    val transactionItemStorage: TransactionItemStorage
+) {
 
-    fun store(transaction: Transaction): TransactionResponse {
-        return TransactionResponse(transaction(Connection.TRANSACTION_READ_COMMITTED, repetitionAttempts = 1) {
+    fun store(transactionBody: TransactionBody): TransactionResponse {
+        val transactionId = transaction(Connection.TRANSACTION_READ_COMMITTED, repetitionAttempts = 1) {
             TransactionTable.insert {
-                it[userId] = transaction.userId
-                it[items] = transaction.items.joinToString()
-                it[value] = transaction.value!!
+                it[userId] = transactionBody.userId
+                it[value] = transactionBody.value!!
             } get TransactionTable.id
-        })
+        }
+        transactionBody.items.forEach {
+            val transactionItem = TransactionItem(transactionId = transactionId, itemId = it)
+            transactionItemStorage.store(transactionItem)
+        }
+        return TransactionResponse(transactionId)
     }
 
     fun search(id: Long): Transaction {
+        val itemIds = transactionItemStorage.searchByTransactionId(id)
+        val items = itemStorage.searchByIdList(itemIds)
         return transaction(Connection.TRANSACTION_READ_COMMITTED, repetitionAttempts = 1) {
             id.let {
                 TransactionTable
                     .select { TransactionTable.id eq it }.limit(1)
-                    .map { it.toTransaction() }.firstOrNull() ?: throw TransactionNotFoundException()
+                    .map { it.toTransaction(items) }.firstOrNull() ?: throw TransactionNotFoundException()
             }
         }
     }
@@ -65,10 +73,10 @@ class TransactionStorage {
 
 enum class TransactionStatus { OPEN, SUCCESS, FAILED }
 
-fun ResultRow.toTransaction() = Transaction(
+fun ResultRow.toTransaction(items: List<Item>) = Transaction(
     id = this[TransactionTable.id],
     userId = this[TransactionTable.userId],
-    items = this[TransactionTable.items].removeSurrounding("[", "]").split(", ").map { it.toLong() },
+    items = items,
     value = this[TransactionTable.value],
     status = this[TransactionTable.status]
 )

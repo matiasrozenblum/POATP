@@ -1,10 +1,11 @@
 package com.mrozenblum.poatp
 
 import com.mrozenblum.poatp.domain.Item
-import com.mrozenblum.poatp.domain.Transaction
+import com.mrozenblum.poatp.domain.TransactionBody
 import com.mrozenblum.poatp.domain.TransactionResponse
 import com.mrozenblum.poatp.domain.User
 import com.mrozenblum.poatp.storage.ItemStorage
+import com.mrozenblum.poatp.storage.TransactionItemStorage
 import com.mrozenblum.poatp.storage.TransactionStatus.FAILED
 import com.mrozenblum.poatp.storage.TransactionStatus.SUCCESS
 import com.mrozenblum.poatp.storage.TransactionStorage
@@ -16,6 +17,7 @@ class Service(
     private val transactionStorage: TransactionStorage,
     private val userStorage: UserStorage,
     private val itemStorage: ItemStorage,
+    private val transactionItemStorage: TransactionItemStorage
 ) {
     fun saveUser(user: User) = userStorage.store(user)
 
@@ -33,13 +35,13 @@ class Service(
 
     fun deleteItem(itemId: Long) = itemStorage.delete(itemId)
 
-    fun createTransaction(transaction: Transaction): TransactionResponse {
+    fun createTransaction(transactionBody: TransactionBody): TransactionResponse {
         var value: Long = 0
-        transaction.items.forEach {
+        transactionBody.items.forEach {
             val item = getItem(it)
             value += item.value
         }
-        return transactionStorage.store(transaction.copy(value = value))
+        return transactionStorage.store(transactionBody.copy(value = value))
     }
 
     fun getTransaction(transactionId: Long) = transactionStorage.search(transactionId)

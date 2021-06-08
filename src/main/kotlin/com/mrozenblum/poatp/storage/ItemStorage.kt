@@ -3,6 +3,7 @@ package com.mrozenblum.poatp.storage
 import com.mrozenblum.poatp.ItemNotFoundException
 import com.mrozenblum.poatp.domain.Item
 import com.mrozenblum.poatp.domain.ItemResponse
+import com.mrozenblum.poatp.domain.TransactionItem
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Service
@@ -36,6 +37,14 @@ class ItemStorage {
                     .map { it.toItem() }.firstOrNull() ?: throw ItemNotFoundException()
             }
         }
+    }
+
+    fun searchByIdList(transactionItems: List<TransactionItem>): List<Item> {
+        val items = mutableListOf<Item>()
+        transactionItems.forEach { transactionItem ->
+            items.add(search(transactionItem.itemId))
+        }
+        return items
     }
 
     fun delete(id: Long): Boolean {

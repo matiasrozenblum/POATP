@@ -2,9 +2,10 @@ package com.mrozenblum.poatp.controller
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.mrozenblum.poatp.domain.Item
-import com.mrozenblum.poatp.domain.Transaction
+import com.mrozenblum.poatp.domain.TransactionBody
 import com.mrozenblum.poatp.domain.User
 import com.mrozenblum.poatp.storage.ItemTable
+import com.mrozenblum.poatp.storage.TransactionItemTable
 import com.mrozenblum.poatp.storage.TransactionStatus.*
 import com.mrozenblum.poatp.storage.TransactionTable
 import com.mrozenblum.poatp.storage.UserTable
@@ -34,8 +35,8 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
 
     @AfterEach
     fun cleanUp() {
-        transaction { SchemaUtils.drop(TransactionTable, UserTable, ItemTable) }
-        transaction { SchemaUtils.create(TransactionTable, UserTable, ItemTable) }
+        transaction { SchemaUtils.drop(TransactionTable, UserTable, ItemTable, TransactionItemTable) }
+        transaction { SchemaUtils.create(TransactionTable, UserTable, ItemTable, TransactionItemTable) }
     }
 
     @Test
@@ -187,14 +188,14 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
     fun createTransaction() {
         saveItem()
         saveUser()
-        val transaction = Transaction(
+        val transactionBody = TransactionBody(
             userId = 1,
             items = listOf(1),
         )
         mockMvc
             .perform(
                 post("/api/transaction")
-                    .content(jacksonObjectMapper().writeValueAsString(transaction))
+                    .content(jacksonObjectMapper().writeValueAsString(transactionBody))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
@@ -205,6 +206,7 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
     @Test
     fun getTransaction() {
         saveTransaction()
+        saveItem()
         mockMvc
             .perform(
                 get("/api/transaction/1")
@@ -213,7 +215,6 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
             .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(1))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.items").value(1))
             .andExpect(MockMvcResultMatchers.jsonPath("$.value").value(10))
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(OPEN.name))
     }
@@ -254,6 +255,8 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
     fun closeTransactionWithEnoughPoints() {
         saveUser()
         saveTransaction()
+        saveItem()
+        saveTransactionItem()
         mockMvc
             .perform(
                 put("/api/transaction/1")
@@ -281,7 +284,7 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
             .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(1))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.items").value(1))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.items").isArray)
             .andExpect(MockMvcResultMatchers.jsonPath("$.value").value(10))
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(SUCCESS.name))
     }
@@ -290,6 +293,8 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
     fun closeTransactionWithoutEnoughPoints() {
         saveUser(5)
         saveTransaction()
+        saveItem()
+        saveTransactionItem()
         mockMvc
             .perform(
                 put("/api/transaction/1")
@@ -317,7 +322,7 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
             .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(1))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.items").value(1))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.items").isArray)
             .andExpect(MockMvcResultMatchers.jsonPath("$.value").value(10))
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(FAILED.name))
     }
@@ -345,8 +350,16 @@ class ApiControllerTest(@Autowired private val mockMvc: MockMvc) {
         transaction {
             TransactionTable.insert {
                 it[userId] = 1
-                it[items] = "1"
                 it[value] = 10
+            }
+        }
+    }
+
+    private fun saveTransactionItem() {
+        transaction {
+            TransactionItemTable.insert {
+                it[transactionId] = 1
+                it[itemId] = 1
             }
         }
     }

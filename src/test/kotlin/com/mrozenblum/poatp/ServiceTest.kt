@@ -2,6 +2,7 @@ package com.mrozenblum.poatp
 
 import com.mrozenblum.poatp.domain.*
 import com.mrozenblum.poatp.storage.ItemStorage
+import com.mrozenblum.poatp.storage.TransactionItemStorage
 import com.mrozenblum.poatp.storage.TransactionStatus.*
 import com.mrozenblum.poatp.storage.TransactionStorage
 import com.mrozenblum.poatp.storage.UserStorage
@@ -24,11 +25,14 @@ class ServiceTest {
     @Mock
     private lateinit var transactionStorage: TransactionStorage
 
+    @Mock
+    private lateinit var transactionItemStorage: TransactionItemStorage
+
     private lateinit var service: Service
 
     @BeforeEach
     fun setUp() {
-        service = Service(transactionStorage, userStorage, itemStorage)
+        service = Service(transactionStorage, userStorage, itemStorage, transactionItemStorage)
     }
 
     @Test
@@ -127,7 +131,7 @@ class ServiceTest {
 
     @Test
     fun createTransaction() {
-        val transaction = Transaction(
+        val transactionBody = TransactionBody(
             userId = 1,
             items = listOf(1)
         )
@@ -138,24 +142,32 @@ class ServiceTest {
         )
         val transactionResponse = TransactionResponse(1)
         whenever(itemStorage.search(1)).thenReturn(item)
-        whenever(transactionStorage.store(transaction.copy(value = 10))).thenReturn(transactionResponse)
+        whenever(transactionStorage.store(transactionBody.copy(value = 10))).thenReturn(transactionResponse)
 
-        service.createTransaction(transaction).apply {
+        service.createTransaction(transactionBody).apply {
             assertThat(this).isEqualTo(transactionResponse)
         }
     }
 
     @Test
     fun getTransaction() {
+        val item = Item(
+            1,
+            "pelota",
+            10
+        )
         val transaction = Transaction(
             userId = 1,
-            items = listOf(1),
+            items = listOf(item),
             value = 10,
             status = OPEN.name
         )
         whenever(transactionStorage.search(1)).thenReturn(transaction)
         service.getTransaction(1).apply {
-            assertThat(this.copy(null)).isEqualTo(transaction)
+            assertThat(this.userId).isEqualTo(1)
+            assertThat(this.value).isEqualTo(10)
+            assertThat(this.items).isEqualTo(listOf(item))
+            assertThat(this.status).isEqualTo(OPEN.name)
         }
     }
 
@@ -170,10 +182,15 @@ class ServiceTest {
 
     @Test
     fun closeTransactionWithEnoughPoints() {
+        val item = Item(
+            1,
+            "pelota",
+            10
+        )
         val transaction = Transaction(
             1,
             1,
-            listOf(1),
+            listOf(item),
             10,
             OPEN.name
         )
@@ -189,10 +206,15 @@ class ServiceTest {
 
     @Test
     fun closeTransactionWithoutEnoughPoints() {
+        val item = Item(
+            1,
+            "pelota",
+            10
+        )
         val transaction = Transaction(
             1,
             1,
-            listOf(1),
+            listOf(item),
             10,
             OPEN.name
         )
