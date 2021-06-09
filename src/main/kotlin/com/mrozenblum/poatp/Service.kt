@@ -56,6 +56,10 @@ class Service(
             status = SUCCESS
             userStorage.discountPoints(transaction.userId, userPoints - transaction.value)
         }
-        return transactionStorage.updateStatus(transactionId, status)
+        val result = transactionStorage.updateStatus(transactionId, status)
+        if (status == FAILED) {
+            throw NotEnoughPointsException()
+        }
+        return result
     }
 }
