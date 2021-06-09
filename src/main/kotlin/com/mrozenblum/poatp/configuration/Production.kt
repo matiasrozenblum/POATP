@@ -25,7 +25,7 @@ fun getDatasource(): DataSource {
     val dbName = "tp"
     val url = "jdbc:mysql://$host/$dbName"
     val username = "root"
-    val password = "19121997Mm."
+    val password = "123456789Aa"
     val dataSource = DataSourceBuilder.create()
         .type(HikariDataSource::class.java)
         .url(url)
